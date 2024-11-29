@@ -53,7 +53,24 @@ properties:
       user's device has an accelerometer.
 
       ```lua
-      local UserInputService = game:GetService("UserInputService")
+      local UserInputService local player = game.Players.LocalPlayer
+local camera = game.Workspace.CurrentCamera
+
+-- Set up split screen for two players
+local screenWidth = camera.ViewportSize.X
+local screenHeight = camera.ViewportSize.Y
+
+-- Split screen vertically (Top for Player 1, Bottom for Player 2)
+if player == game.Players.LocalPlayer then
+    -- If the player is Player 1
+    camera.CFrame = CFrame.new(0, screenHeight / 4, 0)  -- Adjust position for Player 1's viewport
+    camera.ViewportSize = Vector2.new(screenWidth, screenHeight / 2)  -- Top half of the screen
+else
+    -- If the player is Player 2
+    camera.CFrame = CFrame.new(0, -screenHeight / 4, 0)  -- Adjust position for Player 2's viewport
+    camera.ViewportSize = Vector2.new(screenWidth, screenHeight / 2)  -- Bottom half of the screen
+end
+ = game:GetService("UserInputService")
 
       local accelerometerEnabled = UserInputService.AccelerometerEnabled
       if accelerometerEnabled then
@@ -69,7 +86,34 @@ properties:
       `Class.UserInputService.DeviceAccelerationChanged` event.
 
       As `Class.UserInputService` is client-side only, this property can only be
-      used in a `Class.LocalScript`.
+      used in a `Class.LocalScript~1 rf local UserInputService = game:GetService("UserInputService")
+
+local function onInput(input)
+    if input.UserInputType == Enum.UserInputType.Keyboard then
+        if input.KeyCode == Enum.KeyCode.W then
+            -- Move Player 1 up
+        elseif input.KeyCode == Enum.KeyCode.A then
+            -- Move Player 1 left
+        elseif input.KeyCode == Enum.KeyCode.S then
+            -- Move Player 1 down
+        elseif input.KeyCode == Enum.KeyCode.D then
+            -- Move Player 1 right
+        end
+        
+        if input.KeyCode == Enum.KeyCode.Up then
+            -- Move Player 2 up
+        elseif input.KeyCode == Enum.KeyCode.Left then
+            -- Move Player 2 left
+        elseif input.KeyCode == Enum.KeyCode.Down then
+            -- Move Player 2 down
+        elseif input.KeyCode == Enum.KeyCode.Right then
+            -- Move Player 2 right
+        end
+    end
+end
+
+UserInputService.InputBegan:Connect(onInput)
+`.
     code_samples:
       - UserInputService-DeviceGravityChanged
       - UserInputService-DeviceRotationChanged
